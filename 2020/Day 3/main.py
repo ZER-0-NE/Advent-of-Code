@@ -1,31 +1,20 @@
-from itertools import combinations
-from collections import Counter
-
 with open('data.txt', 'r') as f:
 	rows = f.read().strip().split('\n')
 
-# part 1
-count1 = 0
-
-for i in rows:
-	num, c, s = i.split()
-	n, m = map(int, num.split('-'))
-	counter = Counter(s)
-	if counter[c[0]] >= n and counter[c[0]] <= m:
-		count1+=1
-
-print(count1)
+# print(rows)
 
 
-# part 2
+def part1(data , r, d):
+	tree = 0
+	n, m = len(data), len(data[0]) # 323, 31
+	j = 0
+	for i in range(0, n, d):
+		if data[i][j] == '#':
+			tree += 1
+		j = (j+r)%m
+	return tree
 
-count2 = 0
-
-for i in rows:
-	num, c, s = i.split()
-	n, m = map(int, num.split('-'))
-	if (c[0] == s[n-1]) + (c[0] == s[m-1]) == 1:
-		count2+=1
 
 
-print(count2)
+print(f"Part 1: {part1(rows, 3, 1)}")
+print(f"Part 2: {part1(rows, 3, 1) * part1(rows, 1, 1) * part1(rows, 5, 1) * part1(rows, 7, 1) * part1(rows, 1, 2)}")
