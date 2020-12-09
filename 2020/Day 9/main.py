@@ -13,4 +13,15 @@ def valid(nums, n):
 
 for i in range(25, len(nums)):
 	if not valid(nums[i-25:i], nums[i]):
-		print(nums[i])
+		target = nums[i]
+		print("1: " + str(target))
+
+for i in range(len(nums)):
+	for j in range(i+1, len(nums)):
+		if sum(nums[i:j]) == target:
+			print("2: " + str(min(nums[i:j]) + max(nums[i:j])))
+
+# Part 2 prints two answers. The second one is just 2*magic and comes from just selecting the 
+# range [i, i+1) if i is the index with the magic number and can be ignored.
+
+#credits to bluepichu
