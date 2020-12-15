@@ -42,10 +42,13 @@ def double_adjacent_same(num):
 
 	return group_len == 2
 
-res = 0
+res1, res2 = 0, 0
 
 for i in range(A, B+1):
+	if is_increasing(i) and two_adjacent_same(i):
+		res1+=1
 	if is_increasing(i) and double_adjacent_same(i):
-		res += 1
+		res2 += 1
 
-print(res)
+print(f"1. {res1}")
+print(f"2. {res2}")
