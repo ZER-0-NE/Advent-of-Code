@@ -23,3 +23,21 @@ for line in open('data.txt'):
 	if claim.max() == 1:
 		print(f"2. {r['id']}")
 
+
+# SO answer:
+# import numpy as np
+
+# A = np.zeros((100, 100))
+# B = np.zeros((100, 100))
+
+# A[rect1.top : rect1.bottom,  rect1.left : rect1.right] = 1
+# B[rect2.top : rect2.bottom,  rect2.left : rect2.right] = 1
+
+# area_of_union     = np.sum((A + B) > 0)
+# area_of_intersect = np.sum((A + B) > 1)
+
+# In this example, we create two zero-matrices that are the size of the canvas. For each rectangle, 
+# fill one of these matrices with ones where the rectangle takes up space. Then sum the matrices. 
+# Now sum(A+B > 0) is the area of the union, and sum(A+B > 1) is the area of the overlap. 
+# This example can easily generalize to multiple rectangles.
+
