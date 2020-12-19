@@ -15,4 +15,11 @@ for line in open('data.txt'):
 	claim[:] = claim+1
 	# print(claim)
 
-print(np.sum(np.where(fabric>1,1,0)))
+print(f"1. {np.sum(np.where(fabric>1,1,0))}")
+
+for line in open('data.txt'):
+	r = parse.parse(claim_matcher, line)
+	claim = fabric[r['y']:r['y'] + r['height'], r['x']:r['x']+r['width']]
+	if claim.max() == 1:
+		print(f"2. {r['id']}")
+
