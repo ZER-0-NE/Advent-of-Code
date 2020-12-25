@@ -39,3 +39,14 @@ def full_react(s):
 
 data = lines[0]
 print(f"1. {len(full_react(data))}")
+
+# part 2
+
+lens = []
+for c in alphabet:
+	data = lines[0]
+	data = data.replace(c, "")
+	data = data.replace(c.upper(), "")
+	lens.append(len(full_react(data)))
+
+print(f"2. {min(lens)}")
