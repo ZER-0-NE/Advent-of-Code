@@ -1,5 +1,5 @@
 import re
-
+import math
 # departure location: 47-874 or 885-960
 # departure station: 25-616 or 622-964
 # departure platform: 42-807 or 825-966
@@ -32,7 +32,7 @@ with open('data.txt', 'r') as f:
 
 # print(data[0])
 
-rule_pattern = re.compile(r'([a-z]+): (\d+)-(\d+) or (\d+)-(\d+)')
+rule_pattern = re.compile(r'([ a-z]+): (\d+)-(\d+) or (\d+)-(\d+)')
 rules = {}
 
 for match in rule_pattern.finditer(data[0]):
@@ -51,4 +51,7 @@ nearby_tickets = [[int(n) for n in line.split(',')] for line in data[2].splitlin
 
 print(f"1. {sum(num for ticket in nearby_tickets for num in ticket if num not in all_fields)}")
 
+
+# part 2
+# filter out invalid tickets
 
