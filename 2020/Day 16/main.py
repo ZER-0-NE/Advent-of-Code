@@ -27,6 +27,8 @@ import math
 # nearby tickets:
 # 191,477,199,428,5,724,512,212
 
+
+#PART 1
 with open('data.txt', 'r') as f:
 	data = f.read().split('\n\n')
 
@@ -52,6 +54,78 @@ nearby_tickets = [[int(n) for n in line.split(',')] for line in data[2].splitlin
 print(f"1. {sum(num for ticket in nearby_tickets for num in ticket if num not in all_fields)}")
 
 
-# part 2
-# filter out invalid tickets
 
+
+# another solution: (credits to r0f1 on github)
+
+import numpy as np
+
+with open('data.txt', 'r') as f:
+	lines = [x.strip() for x in f]
+
+# print(lines)
+
+sep1 = 'your ticket:'
+sep2 = 'nearby tickets:'
+
+part1 = lines[:lines.index(sep1)-1]
+
+your_tickets = [int(n) for n in lines[lines.index(sep1)+1].split(',')]
+
+part3 = lines[lines.index(sep2)+1:]
+
+allowed = []
+
+for line in part1:
+	a = set()
+	ranges = line.split(':')[1]
+	for r in ranges.split(' or '):
+		lb, ub = int(r.split('-')[0]), int(r.split('-')[1])
+		for i in range(lb, ub+1):
+			a.add(i)
+	allowed.append(a) # get all allowed numbers 
+
+
+score = []
+c = len(part1)
+
+#create a 1's matrix where each 0 position would indicate discarded tickets with invalid values from part 1
+poss_mat = np.ones((c,c), dtype=np.uint8) 
+
+for line in part3:
+	okay = True
+	numbers = [int(n) for n in line.split(',')]
+	for n in numbers:
+		if not any(n in a for a in allowed):
+			score.append(n)
+			okay = False
+	if okay:
+		for field_x, n in enumerate(numbers):
+			for j, a in enumerate(allowed):
+				if n not in a:
+					poss_mat[field_x][j] = 0
+
+print(f"1. {sum(score)}")
+
+# print(poss_mat)
+
+change = True
+seen = set()
+
+while change:
+	change = False
+	for i, row in enumerate(poss_mat):
+		if sum(row) == 1 and i not in seen:
+			seen.add(i)
+			change = True
+			col = np.argmax(row)
+			poss_mat[:, col] = 0
+			poss_mat[i, col] = 1
+
+res = 1
+for j, row in enumerate(poss_mat):
+	if np.argmax(row)<6:
+		# print(row)
+		res *= your_tickets[j]
+
+print(f"2. {res}")
