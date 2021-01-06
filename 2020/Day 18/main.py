@@ -24,3 +24,42 @@ def ev(expr, pt2=False):
 
 print(f"Part 1: {sum(ev(l) for l in lines)}")
 print(f"Part 2: {sum(ev(l, True) for l in lines)}")
+
+
+# another solution using ast (abstract syntax tree)
+
+import ast
+from typing import List
+
+class SubToMult(ast.NodeTransformer):
+	def visit_Sub(self, node):
+		return ast.Mult()
+
+class MultToAdd(ast.NodeTransformer):
+	def visit_Mult(self, node):
+		return ast.Add()
+
+def part1(lines: List[str]):
+	result = []
+	for line in lines:
+		tree = ast.parse(f"this_result = {line.replace('*', '-')}")
+		print(f"tree: {tree}")
+		SubToMult().visit(tree)
+		code = compile(tree, filename="<ast>", mode="exec")
+		exec(code, globals())
+		result.append(this_result)
+	return sum(result)
+
+def part2(lines: List[str]):
+	result = []
+	for line in lines:
+		tree = ast.parse(f"this_result = {line.replace('*', '-').replace('+', '*')}")
+		MultToAdd().visit(tree)
+		SubToMult().visit(tree)
+		code = compile(tree, filename="<ast>", mode="exec")
+		exec(code, globals())
+		result.append(this_result)
+	return sum(result)
+
+print(f"1: {part1(lines)}")
+print(f"2: {part2(lines)}")
