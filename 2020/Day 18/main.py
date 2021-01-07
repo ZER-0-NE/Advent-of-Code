@@ -43,7 +43,6 @@ def part1(lines: List[str]):
 	result = []
 	for line in lines:
 		tree = ast.parse(f"this_result = {line.replace('*', '-')}")
-		print(f"tree: {tree}")
 		SubToMult().visit(tree)
 		code = compile(tree, filename="<ast>", mode="exec")
 		exec(code, globals())
@@ -63,3 +62,46 @@ def part2(lines: List[str]):
 
 print(f"1: {part1(lines)}")
 print(f"2: {part2(lines)}")
+
+
+# another solution using deque
+
+import re
+from collections import deque
+from math import prod
+from operator import add, mul
+
+def equal_precedence(tokens, operators={'+': add, '*': mul}):
+	tokens = deque(tokens.split())
+	res = int(tokens.popleft())
+	while tokens:
+		op, nr = tokens.popleft(), int(tokens.popleft())
+		res = operators[op](res, nr)
+	return res
+
+def add_before(tokens):
+	return prod(map(equal_precedence, tokens.split('*')))
+
+def evaluate(tokens, inner_eval, brackets_regex = re.compile(r'(\([^()]+\))')):
+	'''
+	the regex outputs the innermost brackets to evaluate them <re.Match object; span=(4, 23), 
+	match='(3 + 9 * 2 + 5 * 5)'>
+	for the line '4 + (3 + 9 * 2 + 5 * 5)'
+	'''
+	inside_brackets = brackets_regex.search(tokens)
+	if not inside_brackets:
+		return inner_eval(tokens)
+
+	inside_brackets = inside_brackets.group(1)
+	brackets_result = inner_eval(inside_brackets.strip('()'))
+	new_tokens = tokens.replace(inside_brackets, str(brackets_result))
+	return evaluate(new_tokens, inner_eval)
+
+def solve_first(lines):
+	return sum(evaluate(line, equal_precedence) for line in lines)
+
+def solve_second(lines):
+	return sum(evaluate(line, add_before) for line in lines)
+
+print(f"1. {solve_first(lines)}")
+print(f"2. {solve_second(lines)}")
