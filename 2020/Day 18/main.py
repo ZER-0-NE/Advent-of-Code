@@ -84,7 +84,7 @@ def add_before(tokens):
 
 def evaluate(tokens, inner_eval, brackets_regex = re.compile(r'(\([^()]+\))')):
 	'''
-	the regex outputs the innermost brackets to evaluate them <re.Match object; span=(4, 23), 
+	the regex outputs the innermost brackets to evaluate them :- <re.Match object; span=(4, 23), 
 	match='(3 + 9 * 2 + 5 * 5)'>
 	for the line '4 + (3 + 9 * 2 + 5 * 5)'
 	'''
